@@ -1,155 +1,282 @@
 import { useEffect, useMemo, useState } from 'react'
-import { MessageCircle } from 'lucide-react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { MessageCircle, ArrowRight, Search, SlidersHorizontal } from 'lucide-react'
 import { categories, properties } from '../data/properties'
 import { categoryEnquiryUrl } from '../utils/whatsapp'
 import PropertyCard from './PropertyCard'
 
-export default function PropertyGrid() {
-  const [activeCategory, setActiveCategory] = useState('')
+export default function PropertyGrid({ isHomePage = false }) {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const initialCat = searchParams.get('category') || ''
+  const [activeCategory, setActiveCategory] = useState(initialCat)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    const onFilter = (event) => {
-      setActiveCategory(event.detail || '')
+    const cat = searchParams.get('category') || ''
+    setActiveCategory(cat)
+  }, [searchParams])
+
+  const handleCategoryChange = (id) => {
+    setActiveCategory(id)
+    if (id) {
+      setSearchParams({ category: id })
+    } else {
+      setSearchParams({})
     }
-    window.addEventListener('filter-category', onFilter)
-    return () => window.removeEventListener('filter-category', onFilter)
-  }, [])
+  }
 
   const filtered = useMemo(() => {
-    if (!activeCategory) return properties
-    return properties.filter((p) => p.categoryId === activeCategory)
-  }, [activeCategory])
+    return properties.filter((p) => {
+      const matchesCategory = !activeCategory || p.categoryId === activeCategory
+      const query = searchQuery.toLowerCase().trim()
+      const matchesQuery =
+        !query ||
+        p.name.toLowerCase().includes(query) ||
+        p.location.toLowerCase().includes(query) ||
+        p.category.toLowerCase().includes(query) ||
+        (p.description && p.description.toLowerCase().includes(query))
+      return matchesCategory && matchesQuery
+    })
+  }, [activeCategory, searchQuery])
+
+  // On Home page, we limit to 4 featured cards for preview
+  const displayProperties = isHomePage ? filtered.slice(0, 4) : filtered
 
   return (
     <section id="properties" className="section-pad bg-warm-white">
       <div className="container-site">
-        <div className="mb-10 max-w-2xl">
-          <span className="section-eyebrow">Browse Property Categories</span>
-          <h2 className="section-title">Choose a Property Type</h2>
-          <p className="section-lead">
-            Browse categories and featured listings, then enquire on WhatsApp for pricing and
-            availability.
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div className="max-w-2xl">
+            <span className="section-eyebrow">
+              {isHomePage ? 'Featured Properties' : 'Explore Lucknow Real Estate'}
+            </span>
+            <h2 className="section-title">
+              {isHomePage ? 'Explore Our Curated Listings' : 'All Available Properties'}
+            </h2>
+            <p className="section-lead">
+              Browse categories and featured listings across Lucknow, then connect directly on
+              WhatsApp for pricing, brochures, and site visits.
+            </p>
+          </div>
+
+          {isHomePage && (
+            <Link
+              to="/properties"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-navy hover:text-gold transition-colors"
+            >
+              <span>View All Properties ({properties.length})</span>
+              <ArrowRight size={16} className="text-gold" aria-hidden="true" />
+            </Link>
+          )}
+        </div>
+
+        {/* Category Browsing Cards on Home Page */}
+        {isHomePage && (
+          <div className="my-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {categories.map((cat) => (
+              <article
+                key={cat.id}
+                className="group relative overflow-hidden rounded-lg border border-[#E4E5E7] bg-navy shadow-sm transition-all hover:shadow-lg"
+              >
+                <img
+                  src={cat.image}
+                  alt={`Photo for ${cat.name}`}
+                  loading="lazy"
+                  className="aspect-[5/4] w-full object-cover opacity-75 transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/50 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <h3
+                    className="text-xl font-bold text-white drop-shadow-sm"
+                    style={{ fontFamily: 'var(--font-display)' }}
+                  >
+                    {cat.name}
+                  </h3>
+                  <p className="mt-1 text-xs text-white/80 line-clamp-2">{cat.description}</p>
+                  <div className="mt-4 flex items-center gap-2">
+                    <Link
+                      to={`/properties?category=${cat.id}`}
+                      className="btn bg-white !px-3 !py-1.5 text-xs font-bold !text-navy hover:!bg-warm-white transition-colors"
+                    >
+                      View Listings
+                    </Link>
+                    <a
+                      href={categoryEnquiryUrl(cat.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-ghost !px-3 !py-1.5 text-xs"
+                    >
+                      <MessageCircle size={13} aria-hidden="true" />
+                      WhatsApp
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {/* Filter and Search Bar for the Properties page */}
+        {!isHomePage && (
+          <div className="my-8 rounded-xl border border-[#E4E5E7] bg-white p-4 shadow-xs md:p-5">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              {/* Search Input */}
+              <div className="relative flex-1">
+                <Search
+                  size={18}
+                  className="absolute top-1/2 left-3.5 -translate-y-1/2 text-charcoal/40"
+                  aria-hidden="true"
+                />
+                <input
+                  type="text"
+                  placeholder="Search by name, location (e.g. Gomti Nagar, Raebareli Road)..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full rounded-md border border-[#D5D6D8] bg-warm-white py-2.5 pr-4 pl-10 text-sm text-charcoal outline-none transition-colors focus:border-navy focus:bg-white"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-xs font-semibold text-charcoal/50 hover:text-charcoal"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+
+              {/* Reset Filter Button if active */}
+              {(activeCategory || searchQuery) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveCategory('')
+                    setSearchQuery('')
+                    setSearchParams({})
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-dark hover:underline"
+                >
+                  <SlidersHorizontal size={14} />
+                  Reset all filters
+                </button>
+              )}
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-light-grey pt-4">
+              <span className="mr-2 text-xs font-bold text-charcoal/60 uppercase">Filter:</span>
+              <button
+                type="button"
+                onClick={() => handleCategoryChange('')}
+                className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                  !activeCategory
+                    ? 'bg-navy text-white shadow-xs'
+                    : 'bg-light-grey text-charcoal/80 hover:bg-navy/10'
+                }`}
+              >
+                All Properties ({properties.length})
+              </button>
+              {categories.map((cat) => {
+                const count = properties.filter((p) => p.categoryId === cat.id).length
+                const active = activeCategory === cat.id
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => handleCategoryChange(cat.id)}
+                    className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                      active
+                        ? 'bg-navy text-white shadow-xs'
+                        : 'bg-light-grey text-charcoal/80 hover:bg-navy/10'
+                    }`}
+                  >
+                    {cat.name} ({count})
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Section title for listings */}
+        <div className="mb-6 flex items-center justify-between">
+          <p className="text-sm font-semibold text-charcoal/70">
+            Showing <span className="font-bold text-navy">{displayProperties.length}</span>{' '}
+            {displayProperties.length === 1 ? 'property' : 'properties'}
+            {activeCategory && (
+              <span>
+                {' '}
+                in{' '}
+                <span className="text-gold-dark">
+                  {categories.find((c) => c.id === activeCategory)?.name}
+                </span>
+              </span>
+            )}
+            {searchQuery && (
+              <span>
+                {' '}
+                matching "<span className="text-navy">{searchQuery}</span>"
+              </span>
+            )}
           </p>
         </div>
 
-        <div className="mb-8 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setActiveCategory('')}
-            className={`rounded px-3.5 py-2 text-sm font-medium transition-colors ${
-              !activeCategory
-                ? 'bg-navy text-white'
-                : 'bg-light-grey text-charcoal hover:bg-navy/10'
-            }`}
-          >
-            All
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => setActiveCategory(cat.id)}
-              className={`rounded px-3.5 py-2 text-sm font-medium transition-colors ${
-                activeCategory === cat.id
-                  ? 'bg-navy text-white'
-                  : 'bg-light-grey text-charcoal hover:bg-navy/10'
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
-
-        <div className="mb-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((cat) => (
-            <article
-              key={cat.id}
-              className="group relative overflow-hidden border border-[#E4E5E7] bg-navy"
-            >
-              <img
-                src={cat.image}
-                alt={`Illustrative photo for ${cat.name}`}
-                loading="lazy"
-                className="aspect-[5/4] w-full object-cover opacity-70 transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-5">
-                <h3
-                  className="text-xl text-white"
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {cat.name}
-                </h3>
-                <p className="mt-1 text-sm text-white/75">{cat.description}</p>
-                <div className="mt-4 flex gap-2">
-                  <button
-                    type="button"
-                    className="btn bg-white !px-3.5 !py-2 text-xs !text-navy hover:!bg-warm-white"
-                    onClick={() => setActiveCategory(cat.id)}
-                  >
-                    View Related
-                  </button>
-                  <a
-                    href={categoryEnquiryUrl(cat.name)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-ghost !px-3.5 !py-2 text-xs"
-                  >
-                    <MessageCircle size={13} aria-hidden="true" />
-                    Enquire
-                  </a>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div className="mb-6 flex items-end justify-between gap-4">
-          <div>
-            <h3
-              className="text-2xl text-navy"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              Featured Listings
-            </h3>
-            <p className="mt-1 text-sm text-charcoal/65">
-              {activeCategory
-                ? `Showing listings in ${categories.find((c) => c.id === activeCategory)?.name || 'this category'}`
-                : 'Including confirmed and demo sample listings'}
-            </p>
-          </div>
-        </div>
-
-        {filtered.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2">
-            {filtered.map((property) => (
+        {/* Property Cards Grid */}
+        {displayProperties.length > 0 ? (
+          <div className="grid gap-6 sm:grid-cols-2">
+            {displayProperties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-[#D5D6D8] bg-light-grey/60 px-6 py-12 text-center">
-            <p className="text-charcoal/70">
-              No listings in this category yet. Enquire on WhatsApp and we will help you explore
-              available options.
-            </p>
-            <a
-              href={categoryEnquiryUrl(
-                categories.find((c) => c.id === activeCategory)?.name || 'property options',
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-whatsapp mt-5"
+          <div className="rounded-xl border border-dashed border-[#D5D6D8] bg-white px-6 py-14 text-center shadow-xs">
+            <h3
+              className="text-xl font-bold text-navy"
+              style={{ fontFamily: 'var(--font-display)' }}
             >
-              <MessageCircle size={16} aria-hidden="true" />
-              Enquire on WhatsApp
-            </a>
+              No Properties Found
+            </h3>
+            <p className="mx-auto mt-2 max-w-md text-sm text-charcoal/70">
+              We couldn't find any properties matching your current criteria. Get in touch with us on
+              WhatsApp to inquire about upcoming or offline inventory in Lucknow.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveCategory('')
+                  setSearchQuery('')
+                  setSearchParams({})
+                }}
+                className="btn btn-outline text-xs"
+              >
+                Clear Filters
+              </button>
+              <a
+                href={categoryEnquiryUrl('custom property enquiry')}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-whatsapp text-xs"
+              >
+                <MessageCircle size={15} aria-hidden="true" />
+                Inquire on WhatsApp
+              </a>
+            </div>
           </div>
         )}
 
-        <p className="mt-8 text-center text-sm text-charcoal/50">
-          Demo listings and illustrative photographs are for presentation only. Contact Triedge
-          Realty for verified property details.
-        </p>
+        {/* Bottom Callout on Home */}
+        {isHomePage && (
+          <div className="mt-12 text-center">
+            <Link
+              to="/properties"
+              className="btn btn-primary px-7 py-3 text-sm font-bold shadow-md hover:shadow-lg"
+            >
+              <span>Explore All {properties.length} Properties</span>
+              <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   )

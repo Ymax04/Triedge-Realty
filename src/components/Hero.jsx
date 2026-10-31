@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ChevronDown, ArrowRight, MessageSquare } from 'lucide-react'
 import { HERO_IMAGE, categories } from '../data/properties'
 
 export default function Hero() {
@@ -7,21 +8,19 @@ export default function Hero() {
   const [open, setOpen] = useState(false)
   const [imgFailed, setImgFailed] = useState(false)
   const dropdownRef = useRef(null)
+  const navigate = useNavigate()
 
   const selectedLabel =
     categories.find((item) => item.id === category)?.name || 'Select a category'
 
-  const scrollTo = (id, categoryId) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    if (categoryId) {
-      window.dispatchEvent(new CustomEvent('filter-category', { detail: categoryId }))
-    }
-  }
-
   const chooseCategory = (id) => {
     setCategory(id)
     setOpen(false)
-    if (id) scrollTo('properties', id)
+    if (id) {
+      navigate(`/properties?category=${id}`)
+    } else {
+      navigate('/properties')
+    }
   }
 
   useEffect(() => {
@@ -56,53 +55,60 @@ export default function Hero() {
         />
       )}
 
-      {/* Soft readable overlay — not too dark, not too loud */}
+      {/* High-contrast readable overlays */}
       <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(23,43,69,0.45)_0%,rgba(23,43,69,0.72)_70%,rgba(23,43,69,0.82)_100%)]"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(23,43,69,0.55)_0%,rgba(23,43,69,0.8)_70%,rgba(23,43,69,0.92)_100%)]"
         aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-navy/25" aria-hidden="true" />
+      <div className="absolute inset-0 bg-navy/35" aria-hidden="true" />
 
-      <div className="container-site relative z-10 flex w-full flex-col items-center px-1 pt-28 pb-14 text-center md:pt-32 md:pb-20">
+      <div className="container-site relative z-10 flex w-full flex-col items-center px-4 pt-28 pb-16 text-center md:pt-36 md:pb-24">
         <div className="mx-auto w-full max-w-2xl">
-          <p className="mb-4 text-[0.7rem] font-medium tracking-[0.18em] text-[#D4C4A0] uppercase sm:text-xs">
-            Triedge Realty · Lucknow
-          </p>
+          {/* Eyebrow badge */}
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-navy/80 px-4 py-1.5 text-xs font-semibold tracking-[0.16em] text-[#E8CE99] uppercase shadow-lg backdrop-blur-md">
+            <span>Triedge Realty</span>
+            <span className="text-gold">•</span>
+            <span>Lucknow</span>
+          </div>
 
+          {/* Main Hero Heading */}
           <h1
-            className="text-[2.1rem] leading-[1.15] font-semibold text-[#F7F6F3] sm:text-4xl md:text-[2.85rem]"
+            className="text-[2.25rem] font-bold leading-[1.18] text-white drop-shadow-md sm:text-4xl md:text-5xl lg:text-[3.25rem]"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Find a Space That Fits Your Future.
+            Find a Space That <span className="text-gold">Fits Your Future.</span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-xl text-[0.98rem] leading-relaxed text-[#E8E6E1]/90 sm:text-base md:text-lg">
+          {/* Subtitle */}
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/90 drop-shadow-sm sm:text-lg md:text-xl">
             Explore residential and commercial real estate opportunities across Lucknow with
             personalised property assistance.
           </p>
 
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <button
-              type="button"
-              className="btn btn-primary min-w-[10.5rem] bg-[#F7F6F3] !text-navy hover:!bg-white"
-              onClick={() => scrollTo('properties')}
+          {/* Action Buttons */}
+          <div className="mt-8 flex flex-col items-center justify-center gap-3.5 sm:flex-row">
+            <Link
+              to="/properties"
+              className="btn min-w-[11.5rem] bg-white text-navy font-bold shadow-xl hover:bg-warm-white hover:scale-[1.02] transition-all"
             >
               Explore Listings
-            </button>
-            <button
-              type="button"
-              className="btn min-w-[10.5rem] border border-[#F7F6F3]/55 bg-transparent text-[#F7F6F3] hover:border-[#F7F6F3] hover:bg-white/10"
-              onClick={() => scrollTo('contact')}
+              <ArrowRight size={17} className="text-gold" aria-hidden="true" />
+            </Link>
+            <Link
+              to="/contact"
+              className="btn min-w-[11.5rem] border-2 border-white/80 bg-navy/50 text-white font-semibold backdrop-blur-md hover:border-white hover:bg-white hover:text-navy transition-all"
             >
+              <MessageSquare size={16} aria-hidden="true" />
               Contact Us
-            </button>
+            </Link>
           </div>
 
-          <div className="mx-auto mt-10 w-full max-w-md border-t border-white/12 pt-6">
-            <p className="text-xs font-medium tracking-[0.14em] text-[#D4C4A0]/85 uppercase">
+          {/* Category Dropdown Navigation */}
+          <div className="mx-auto mt-10 w-full max-w-md border-t border-white/20 pt-6">
+            <p className="text-xs font-semibold tracking-[0.16em] text-[#E8CE99] uppercase">
               Browse Property Categories
             </p>
-            <p className="mt-2 text-sm text-[#E8E6E1]/80">Choose a property type</p>
+            <p className="mt-1.5 text-sm text-white/80">Choose a property type to view listings</p>
 
             <div ref={dropdownRef} className="relative mt-3 text-left">
               <button
@@ -111,14 +117,14 @@ export default function Hero() {
                 aria-haspopup="listbox"
                 aria-expanded={open}
                 onClick={() => setOpen((value) => !value)}
-                className="flex w-full items-center justify-between rounded border border-white/20 bg-[#172B45]/75 px-3.5 py-3 text-sm text-[#F7F6F3] shadow-lg outline-none backdrop-blur-md transition-colors duration-150 hover:border-[#D4C4A0]/45 focus-visible:border-[#D4C4A0]"
+                className="flex w-full items-center justify-between rounded-md border border-white/30 bg-navy/85 px-4 py-3 text-sm font-medium text-white shadow-xl outline-none backdrop-blur-md transition-colors duration-150 hover:border-gold focus-visible:border-gold"
               >
-                <span className={category ? 'text-[#F7F6F3]' : 'text-[#F7F6F3]/65'}>
+                <span className={category ? 'text-white' : 'text-white/80'}>
                   {selectedLabel}
                 </span>
                 <ChevronDown
-                  size={16}
-                  className={`text-[#D4C4A0] transition-transform duration-150 ${
+                  size={18}
+                  className={`text-gold transition-transform duration-150 ${
                     open ? 'rotate-180' : ''
                   }`}
                   aria-hidden="true"
@@ -129,7 +135,7 @@ export default function Hero() {
                 <ul
                   role="listbox"
                   aria-labelledby="hero-category"
-                  className="absolute z-20 mt-2 max-h-64 w-full overflow-auto rounded border border-white/15 bg-[#1B3050] py-1.5 shadow-2xl"
+                  className="absolute z-30 mt-2 max-h-64 w-full overflow-auto rounded-md border border-white/20 bg-navy-secondary py-1.5 shadow-2xl backdrop-blur-lg"
                 >
                   <li>
                     <button
@@ -137,9 +143,9 @@ export default function Hero() {
                       role="option"
                       aria-selected={!category}
                       onClick={() => chooseCategory('')}
-                      className="w-full px-3.5 py-2.5 text-left text-sm text-[#F7F6F3]/70 transition-colors duration-150 hover:bg-white/10 hover:text-[#F7F6F3]"
+                      className="w-full px-4 py-2.5 text-left text-sm font-medium text-white/80 transition-colors duration-150 hover:bg-navy-soft hover:text-white"
                     >
-                      Select a category
+                      All Categories
                     </button>
                   </li>
                   {categories.map((item) => {
@@ -151,10 +157,10 @@ export default function Hero() {
                           role="option"
                           aria-selected={active}
                           onClick={() => chooseCategory(item.id)}
-                          className={`w-full px-3.5 py-2.5 text-left text-sm transition-colors duration-150 ${
+                          className={`w-full px-4 py-2.5 text-left text-sm font-medium transition-colors duration-150 ${
                             active
-                              ? 'bg-white/10 text-[#F7F6F3]'
-                              : 'text-[#EDEAE4] hover:bg-white/10 hover:text-[#F7F6F3]'
+                              ? 'bg-gold/20 text-gold'
+                              : 'text-white/90 hover:bg-navy-soft hover:text-white'
                           }`}
                         >
                           {item.name}
