@@ -82,7 +82,7 @@ export default function PropertyGrid({ isHomePage = false }) {
                   src={cat.image}
                   alt={`Photo for ${cat.name}`}
                   loading="lazy"
-                  className="aspect-[5/4] w-full object-cover opacity-75 transition-transform duration-500 group-hover:scale-105"
+                  className="aspect-[5/4] w-full object-cover object-top opacity-75 transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/50 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-5">
