@@ -10,16 +10,21 @@ import {
   Calendar,
   Percent,
   FileCheck,
-  ShieldAlert,
+  ShieldCheck,
   Sparkles,
   Maximize2,
   X,
+  Layers,
+  Hammer,
+  CreditCard,
+  Home,
 } from 'lucide-react'
 import { propertyEnquiryUrl } from '../utils/whatsapp'
 
 export default function PropertyDetails({ property }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [activeTableTab, setActiveTableTab] = useState('costs') // 'costs' | 'area'
   const images = property.images?.length ? property.images : []
   const activeImage = images[activeIndex] ?? null
 
@@ -63,9 +68,9 @@ export default function PropertyDetails({ property }) {
         </Link>
 
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
-          {/* Left Column: Image Viewer (Clean presentation, NO black bars) */}
+          {/* Left Column: Image Viewer & Specifications */}
           <div className="lg:col-span-7">
-            {/* Main Showcase Frame: Soft light gradient, perfectly fits posters and landscape images */}
+            {/* Main Showcase Frame: Soft light gradient, perfectly fits posters and landscape images without black bars */}
             <div className="relative flex min-h-[380px] max-h-[580px] items-center justify-center overflow-hidden rounded-xl border border-[#E4E5E7] bg-gradient-to-b from-slate-50 to-slate-100/90 p-3 sm:p-5 shadow-sm">
               {activeImage ? (
                 <div className="relative flex h-full w-full items-center justify-center">
@@ -78,7 +83,7 @@ export default function PropertyDetails({ property }) {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(true)}
-                    className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-md bg-navy/80 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-xs transition-colors hover:bg-navy"
+                    className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-md bg-navy/85 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-xs transition-colors hover:bg-navy shadow-md"
                   >
                     <Maximize2 size={13} />
                     <span>View Full Image</span>
@@ -155,18 +160,189 @@ export default function PropertyDetails({ property }) {
                 </div>
               </div>
 
-              {/* Configurations List if available */}
-              {property.configurations && property.configurations.length > 0 && (
+              {/* Approvals (Sky Om City) */}
+              {property.approvalDetails && (
+                <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 text-xs">
+                  <div className="flex items-center gap-2 font-bold text-emerald-900">
+                    <ShieldCheck size={18} className="text-emerald-700" />
+                    <span className="text-sm">Township Approvals & Legal Status</span>
+                  </div>
+                  <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
+                    <div className="rounded bg-white p-2.5 border border-emerald-100">
+                      <span className="font-semibold text-emerald-950 block">Authority Approval:</span>
+                      <span className="text-charcoal/80">{property.approvalDetails.awasVikas}</span>
+                    </div>
+                    <div className="rounded bg-white p-2.5 border border-emerald-100">
+                      <span className="font-semibold text-emerald-950 block">RERA Status:</span>
+                      <span className="text-charcoal/80">{property.approvalDetails.rera}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Property Options (Sky Om City: Plots & Villas) */}
+              {property.propertyOptions && (
                 <div className="mt-6 border-t border-light-grey pt-6">
-                  <h3 className="text-base font-bold text-navy">Available Configurations</h3>
-                  <div className="mt-3 space-y-2.5">
-                    {property.configurations.map((cfg) => (
+                  <h3 className="text-base font-bold text-navy flex items-center gap-2">
+                    <Home size={18} className="text-gold" />
+                    <span>Available Property Options</span>
+                  </h3>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {property.propertyOptions.map((opt) => (
                       <div
-                        key={cfg.unit}
-                        className="flex items-center justify-between rounded-lg border border-slate-200/80 bg-warm-white p-3.5 text-sm"
+                        key={opt.type}
+                        className="rounded-xl border border-slate-200/90 bg-warm-white p-4 shadow-xs"
                       >
-                        <span className="font-semibold text-navy">{cfg.unit}</span>
-                        <span className="font-bold text-gold-dark">{cfg.price}</span>
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-bold text-navy text-sm">{opt.type}</h4>
+                          <span className="rounded bg-gold/15 px-2 py-0.5 text-xs font-bold text-gold-dark">
+                            {opt.rate}
+                          </span>
+                        </div>
+                        <p className="mt-2 text-xs text-charcoal/75 leading-relaxed">{opt.details}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Sky Om City: Villa Sizes, Costs & Built-up Area Interactive Table */}
+              {property.villaCosts && property.builtUpArea && (
+                <div className="mt-6 border-t border-light-grey pt-6">
+                  <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                    <div>
+                      <h3 className="text-base font-bold text-navy flex items-center gap-2">
+                        <Layers size={18} className="text-gold" />
+                        <span>Villa Sizes, Costs & Area Matrix</span>
+                      </h3>
+                      <p className="text-xs text-charcoal/65">
+                        Official client floor-wise construction cost and built-up area schedule:
+                      </p>
+                    </div>
+
+                    {/* Table View Switcher */}
+                    <div className="flex rounded-lg border border-slate-200 bg-light-grey p-1 text-xs font-semibold">
+                      <button
+                        type="button"
+                        onClick={() => setActiveTableTab('costs')}
+                        className={`rounded-md px-3 py-1 transition-all ${
+                          activeTableTab === 'costs'
+                            ? 'bg-navy text-white shadow-xs'
+                            : 'text-charcoal/70 hover:text-navy'
+                        }`}
+                      >
+                        Construction Costs
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTableTab('area')}
+                        className={`rounded-md px-3 py-1 transition-all ${
+                          activeTableTab === 'area'
+                            ? 'bg-navy text-white shadow-xs'
+                            : 'text-charcoal/70 hover:text-navy'
+                        }`}
+                      >
+                        Built-up Areas
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Table Display */}
+                  <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200 shadow-xs">
+                    {activeTableTab === 'costs' ? (
+                      <table className="w-full text-left text-xs sm:text-sm">
+                        <thead className="bg-navy text-white">
+                          <tr>
+                            <th className="p-3 font-semibold">Plot Area</th>
+                            <th className="p-3 font-semibold">Ground Floor</th>
+                            <th className="p-3 font-semibold">First Floor</th>
+                            <th className="p-3 font-semibold">Second Floor</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white">
+                          {property.villaCosts.map((row) => (
+                            <tr key={row.plotArea} className="hover:bg-slate-50 transition-colors">
+                              <td className="p-3 font-bold text-navy">{row.plotArea}</td>
+                              <td className="p-3 font-medium text-charcoal">{row.groundFloor}</td>
+                              <td className="p-3 font-medium text-charcoal">{row.firstFloor}</td>
+                              <td className="p-3 font-medium text-charcoal">{row.secondFloor}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <table className="w-full text-left text-xs sm:text-sm">
+                        <thead className="bg-navy text-white">
+                          <tr>
+                            <th className="p-3 font-semibold">Plot Area</th>
+                            <th className="p-3 font-semibold">Ground Floor</th>
+                            <th className="p-3 font-semibold">First Floor</th>
+                            <th className="p-3 font-semibold">Second Floor</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white">
+                          {property.builtUpArea.map((row) => (
+                            <tr key={row.plotArea} className="hover:bg-slate-50 transition-colors">
+                              <td className="p-3 font-bold text-navy">{row.plotArea}</td>
+                              <td className="p-3 font-medium text-charcoal">{row.groundFloor}</td>
+                              <td className="p-3 font-medium text-charcoal">{row.firstFloor}</td>
+                              <td className="p-3 font-medium text-charcoal">{row.secondFloor}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                  <p className="mt-2 text-[11px] text-charcoal/60">
+                    * Costs are as per official advertisement specifications. Contact Triedge Realty for full layout blueprints.
+                  </p>
+                </div>
+              )}
+
+              {/* Construction Stage Payment Schedule (Sky Om City) */}
+              {property.paymentStages && (
+                <div className="mt-6 border-t border-light-grey pt-6">
+                  <h3 className="text-base font-bold text-navy flex items-center gap-2">
+                    <CreditCard size={18} className="text-gold" />
+                    <span>Construction Linked Payment Plan (14 Stages)</span>
+                  </h3>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {property.paymentStages.map((ps, idx) => (
+                      <div
+                        key={ps.stage}
+                        className="flex items-center justify-between rounded-lg border border-slate-200/70 bg-warm-white p-2.5 text-xs"
+                      >
+                        <span className="font-medium text-charcoal">
+                          <span className="text-gold-dark font-bold mr-1.5">{idx + 1}.</span>
+                          {ps.stage}
+                        </span>
+                        <span className="font-bold text-navy bg-navy/5 px-2 py-0.5 rounded">
+                          {ps.percent}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-[11px] text-charcoal/60">
+                    Note: GST and other applicable government taxes are extra and payable with each installment.
+                  </p>
+                </div>
+              )}
+
+              {/* Villa Specifications (Sky Om City) */}
+              {property.villaSpecifications && (
+                <div className="mt-6 border-t border-light-grey pt-6">
+                  <h3 className="text-base font-bold text-navy flex items-center gap-2">
+                    <Hammer size={18} className="text-gold" />
+                    <span>Villa Construction Specifications</span>
+                  </h3>
+                  <div className="mt-3 space-y-3">
+                    {property.villaSpecifications.map((spec) => (
+                      <div
+                        key={spec.room}
+                        className="rounded-lg border border-slate-200/80 bg-warm-white p-3.5 text-xs sm:text-sm"
+                      >
+                        <h4 className="font-bold text-navy">{spec.room}</h4>
+                        <p className="mt-1 text-charcoal/75 leading-relaxed">{spec.features}</p>
                       </div>
                     ))}
                   </div>
@@ -329,8 +505,8 @@ export default function PropertyDetails({ property }) {
 
               {/* Price Banner */}
               <div className="mt-6 rounded-xl bg-navy/5 p-4 border border-navy/10">
-                <span className="text-xs font-semibold text-charcoal/60 uppercase">Pricing / Investment</span>
-                <div className="mt-1 text-2xl font-bold text-navy">{property.price}</div>
+                <span className="text-xs font-semibold text-charcoal/60 uppercase">Pricing / Rate</span>
+                <div className="mt-1 text-xl font-bold text-navy sm:text-2xl">{property.price}</div>
                 {property.possession && (
                   <div className="mt-1 flex items-center gap-1.5 text-xs font-medium text-charcoal/70">
                     <Calendar size={13} className="text-gold" />
@@ -411,7 +587,7 @@ export default function PropertyDetails({ property }) {
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 z-10 rounded-full bg-navy/80 p-2 text-white hover:bg-navy"
+              className="absolute top-4 right-4 z-10 rounded-full bg-navy/80 p-2 text-white hover:bg-navy shadow-md"
               aria-label="Close modal"
             >
               <X size={20} />

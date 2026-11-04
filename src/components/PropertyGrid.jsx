@@ -39,8 +39,8 @@ export default function PropertyGrid({ isHomePage = false }) {
     })
   }, [activeCategory, searchQuery])
 
-  // On Home page, we limit to 4 featured cards for preview
-  const displayProperties = isHomePage ? filtered.slice(0, 4) : filtered
+  // On Home page, we display the top curated featured cards
+  const displayProperties = isHomePage ? filtered.slice(0, 6) : filtered
 
   return (
     <section id="properties" className="section-pad bg-warm-white">

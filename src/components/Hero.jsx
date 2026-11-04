@@ -64,11 +64,13 @@ export default function Hero() {
 
       <div className="container-site relative z-10 flex w-full flex-col items-center px-4 pt-28 pb-16 text-center md:pt-36 md:pb-24">
         <div className="mx-auto w-full max-w-2xl">
-          {/* Eyebrow badge */}
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-navy/80 px-4 py-1.5 text-xs font-semibold tracking-[0.16em] text-[#E8CE99] uppercase shadow-lg backdrop-blur-md">
-            <span>Triedge Realty</span>
+          {/* Eyebrow badge with boldly highlighted LUCKNOW */}
+          <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-gold/50 bg-navy/90 px-4 py-1.5 text-xs font-bold tracking-[0.16em] uppercase shadow-xl backdrop-blur-md">
+            <span className="text-white/90">Triedge Realty</span>
             <span className="text-gold">•</span>
-            <span>Lucknow</span>
+            <span className="rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-black tracking-widest text-navy shadow-sm">
+              LUCKNOW
+            </span>
           </div>
 
           {/* Main Hero Heading */}
@@ -76,13 +78,20 @@ export default function Hero() {
             className="text-[2.25rem] font-bold leading-[1.18] text-white drop-shadow-md sm:text-4xl md:text-5xl lg:text-[3.25rem]"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Find a Space That <span className="text-gold">Fits Your Future.</span>
+            Find a Space That <span className="text-gold">Fits Your Future</span> in{' '}
+            <span className="relative inline-block font-black text-white">
+              LUCKNOW
+              <span className="absolute -bottom-1 left-0 right-0 h-1 rounded-full bg-gold" />
+            </span>
           </h1>
 
           {/* Subtitle */}
           <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/90 drop-shadow-sm sm:text-lg md:text-xl">
-            Explore residential and commercial real estate opportunities across Lucknow with
-            personalised property assistance.
+            Explore premium residential plots, luxury villas, apartments, and commercial projects across{' '}
+            <strong className="font-bold text-white underline decoration-gold underline-offset-4">
+              Lucknow
+            </strong>{' '}
+            with personalised property assistance.
           </p>
 
           {/* Action Buttons */}

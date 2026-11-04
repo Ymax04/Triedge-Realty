@@ -1,7 +1,7 @@
 /**
  * PROPERTY DATA LAYER
  * --------------------
- * Real client properties for Triedge Realty, Lucknow.
+ * Real verified client properties for Triedge Realty, Lucknow.
  */
 
 export const WHATSAPP_NUMBER = '919794503222'
@@ -26,6 +26,12 @@ const IMG = {
   rishitaTower: '/uploads/properties/rishita-mulberry-tower.jpg',
   omaxeFloors: '/uploads/properties/omaxe-independent-floors.jpg',
   ekanaCentre: '/uploads/properties/ekana-business-centre.jpg',
+  // Sky Om City Uploads
+  skyomPillars: '/uploads/properties/skyom-pillars.jpg',
+  skyomPark: '/uploads/properties/skyom-park.jpg',
+  skyomTrellis: '/uploads/properties/skyom-trellis.jpg',
+  skyomCostChart: '/uploads/properties/skyom-cost-chart.jpg',
+  skyomAreaChart: '/uploads/properties/skyom-area-chart.jpg',
   // Supporting visuals
   omaxe1: '/uploads/properties/omaxe-1.jpg',
   omaxe2: '/uploads/properties/omaxe-2.jpg',
@@ -53,6 +59,13 @@ export const CTA_IMAGE = {
 
 export const categories = [
   {
+    id: 'residential-plots',
+    name: 'Residential Plots & Villas',
+    description:
+      'Awas Vikas approved residential plots and custom luxury villas along Lucknow Mohanlalganj corridor.',
+    image: IMG.skyomPillars,
+  },
+  {
     id: 'commercial',
     name: 'Commercial & Business Centres',
     description:
@@ -73,16 +86,126 @@ export const categories = [
       'Low-rise G+4 independent floors offering exclusivity, spacious layouts, and gated community lifestyle.',
     image: IMG.omaxeFloors,
   },
-  {
-    id: 'residential-plots',
-    name: 'Residential Plots',
-    description:
-      'Strategic plotted developments and investment parcels along fast-growing Lucknow highway corridors.',
-    image: IMG.plot1,
-  },
 ]
 
 export const properties = [
+  {
+    id: 'sky-om-city',
+    name: 'Sky Om City',
+    badge: 'Awas Vikas Approved',
+    badgeColor: 'emerald',
+    developer: 'Sky Om Developers',
+    location: 'Mohanlalganj, Lucknow, Uttar Pradesh',
+    category: 'Residential Plots & Villas',
+    categoryId: 'residential-plots',
+    projectType: 'Residential Plots & Luxury Villas',
+    price: 'Plots ₹6,000/sq.ft · Villas from ₹49 Lakhs',
+    availability: 'Contact for Availability',
+    featured: true,
+    isDemo: false,
+    mapQuery: 'Mohanlalganj, Lucknow',
+    approvalDetails: {
+      awasVikas: 'Awas Vikas Approved (as informed by client)',
+      rera: 'RERA Approved (Registration Number to be confirmed)',
+    },
+    propertyOptions: [
+      {
+        type: 'Residential Plots',
+        rate: '₹6,000 per sq. ft.',
+        details: 'Multiple plot sizes available (728 to 1,802+ sq. ft.) ready for residential construction.',
+      },
+      {
+        type: 'Luxury Custom Villas',
+        rate: 'Starting ₹49 Lakhs',
+        details: 'G+1 and G+2 customized architectural villa construction options tailored to your plan.',
+      },
+    ],
+    configurations: [
+      { unit: 'Residential Plots', price: '₹6,000 / sq. ft.', status: 'Available' },
+      { unit: 'Custom Luxury Villas', price: 'Starting ₹49 Lakhs', status: 'Available' },
+      { unit: '728 sq. ft. Plot / Villa', price: 'Cost from ₹18.41 L', status: 'Available' },
+      { unit: '956 sq. ft. Plot / Villa', price: 'Cost from ₹23.86 L', status: 'Available' },
+      { unit: '1,300 sq. ft. Plot / Villa', price: 'Cost from ₹30.00 L', status: 'Available' },
+      { unit: '1,464 sq. ft. Plot / Villa', price: 'Cost from ₹35.08 L', status: 'Available' },
+      { unit: '1,802 sq. ft. Plot / Villa', price: 'Cost from ₹44.52 L', status: 'Available' },
+    ],
+    villaCosts: [
+      { plotArea: '728 sq. ft.', groundFloor: '₹18.41 L', firstFloor: '₹29.37 L', secondFloor: 'Not Available' },
+      { plotArea: '956 sq. ft.', groundFloor: '₹23.86 L', firstFloor: '₹41.25 L', secondFloor: '₹48.65 L' },
+      { plotArea: '1,300 sq. ft.', groundFloor: '₹30.00 L', firstFloor: '₹50.00 L', secondFloor: '₹65.23 L' },
+      { plotArea: '1,464 sq. ft.', groundFloor: '₹35.08 L', firstFloor: '₹53.35 L', secondFloor: '₹68.20 L' },
+      { plotArea: '1,802 sq. ft.', groundFloor: '₹44.52 L', firstFloor: '₹74.17 L', secondFloor: '₹98.40 L' },
+    ],
+    builtUpArea: [
+      { plotArea: '728 sq. ft.', groundFloor: '558 sq. ft.', firstFloor: '1,068 sq. ft.', secondFloor: '—' },
+      { plotArea: '956 sq. ft.', groundFloor: '723 sq. ft.', firstFloor: '1,500 sq. ft.', secondFloor: '1,769 sq. ft.' },
+      { plotArea: '1,300 sq. ft.', groundFloor: '909 sq. ft.', firstFloor: '1,818 sq. ft.', secondFloor: '2,372 sq. ft.' },
+      { plotArea: '1,464 sq. ft.', groundFloor: '1,063 sq. ft.', firstFloor: '1,940 sq. ft.', secondFloor: '2,480 sq. ft.' },
+      { plotArea: '1,802 sq. ft.', groundFloor: '1,349 sq. ft.', firstFloor: '2,697 sq. ft.', secondFloor: '3,578 sq. ft.' },
+    ],
+    paymentStages: [
+      { stage: 'Advance at Work Order', percent: '10%' },
+      { stage: 'Within 30 Days', percent: '10%' },
+      { stage: 'Earth Excavation', percent: '7.5%' },
+      { stage: 'PCC Foundation', percent: '7.5%' },
+      { stage: 'RCC Foundation', percent: '7.5%' },
+      { stage: 'Plinth Beam', percent: '7.5%' },
+      { stage: 'First Slab Casting', percent: '7.5%' },
+      { stage: 'Second Slab Casting', percent: '7.5%' },
+      { stage: 'Third Slab Casting', percent: '7.5%' },
+      { stage: 'Brickwork', percent: '7.5%' },
+      { stage: 'Services Installation', percent: '7.5%' },
+      { stage: 'Plaster Work', percent: '7.5%' },
+      { stage: 'Painting', percent: '2.5%' },
+      { stage: 'Villa Handover', percent: '2.5%' },
+    ],
+    villaSpecifications: [
+      {
+        room: 'Bedrooms',
+        features: 'Vitrified tile flooring, premium plastic emulsion wall paint, cove false ceiling as per design, AC provision with copper piping.',
+      },
+      {
+        room: 'Bathrooms',
+        features: 'Anti-skid ceramic tile flooring, ceramic wall tiles up to ceiling height, OBD ceiling paint, POP/Grid false ceiling, Jaquar / Hindware / Cera or equivalent sanitaryware.',
+      },
+      {
+        room: 'Balconies',
+        features: 'Anti-skid ceramic tile flooring, waterproof exterior wall & ceiling paint, MS railing or classical concrete balusters.',
+      },
+      {
+        room: 'Electrical Fittings',
+        features: 'Concealed copper wiring, premium modular switches, lights and fans provided, TV provisions in bedrooms, living/dining and family lounge.',
+      },
+    ],
+    amenities: [
+      'Awas Vikas Approved',
+      'Grand Classical Entrance Pillars',
+      'Landscaped Green Parks with Art Sculptures',
+      'Wide Tree-Lined Township Roads',
+      'Custom Villa Construction',
+      '24×7 Security & Gated Perimeter',
+      'Reliable Water & Electricity Network',
+      'Kids Play Zone',
+    ],
+    highlights: [
+      'Prime Location in Mohanlalganj, Lucknow',
+      'Awas Vikas Approved Township',
+      'Plots at ₹6,000/sq.ft & Custom Villas Starting ₹49 Lakhs',
+      'Flexible 14-Stage Construction Linked Payment Plan',
+      'Grand Classical Architectural Entrance & Green Enclaves',
+      'Premium Fixtures (Jaquar / Hindware / Cera Equivalent)',
+    ],
+    description:
+      'Sky Om City in Mohanlalganj, Lucknow is a prestigious Awas Vikas approved township offering premium residential plots and bespoke luxury villas. Plots are offered at ₹6,000 per sq. ft., and custom luxury villas start at ₹49 Lakhs with Ground, First, and Second Floor options. The township features monumental classical pillar gateways, manicured parks, modern underground utilities, and an investor-friendly 14-stage construction payment plan. Connect with Triedge Realty on WhatsApp for layout maps and site visits.',
+    images: [
+      IMG.skyomPillars,
+      IMG.skyomPark,
+      IMG.skyomTrellis,
+      IMG.skyomCostChart,
+      IMG.skyomAreaChart,
+    ],
+    imageNote: 'Actual verified photographs of Sky Om City entrance, parks, and official specifications charts.',
+  },
   {
     id: 'rishita-mulberry-heights',
     name: 'Rishita Mulberry Heights',

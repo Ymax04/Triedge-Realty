@@ -66,6 +66,9 @@ export default function Navbar() {
             <span className="font-medium text-gold transition-colors group-hover:text-gold-light">
               Realty
             </span>
+            <span className="ml-1 rounded bg-gold/20 border border-gold/40 px-1.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-gold-light">
+              LUCKNOW
+            </span>
           </Link>
 
           {/* Desktop Navigation with active indicator lines */}
@@ -146,10 +149,14 @@ export default function Navbar() {
             <Link
               to="/"
               onClick={() => setOpen(false)}
-              className="text-lg font-bold text-navy"
+              className="flex items-center gap-1.5 text-lg font-bold text-navy"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              Triedge <span className="text-gold">Realty</span>
+              <span>Triedge</span>
+              <span className="text-gold">Realty</span>
+              <span className="ml-1 rounded bg-navy/10 border border-navy/20 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-navy">
+                LUCKNOW
+              </span>
             </Link>
             <button
               type="button"

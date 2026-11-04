@@ -20,10 +20,14 @@ export default function Footer() {
         <div className="md:col-span-4">
           <Link
             to="/"
-            className="inline-block text-2xl font-bold tracking-tight text-white hover:opacity-95"
+            className="inline-flex items-center gap-2 text-2xl font-bold tracking-tight text-white hover:opacity-95"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Triedge <span className="text-gold">Realty</span>
+            <span>Triedge</span>
+            <span className="text-gold">Realty</span>
+            <span className="rounded bg-white/10 border border-white/25 px-2 py-0.5 text-[11px] font-black uppercase tracking-widest text-gold-light">
+              LUCKNOW
+            </span>
           </Link>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">
             Real estate consultancy in Lucknow helping clients explore premium residential, villa,
