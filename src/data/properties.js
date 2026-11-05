@@ -11,7 +11,7 @@ export const BUSINESS = {
   location: 'Lucknow, Uttar Pradesh',
   phoneDisplay: '+91 97945 03222',
   phoneRaw: '919794503222',
-  email: 'sharmaankit2502@gmail.com',
+  email: 'triedgerealty26@gmail.com',
   youtube: 'https://www.youtube.com/@PropertyConsultant30',
   youtubeLabel: '@PropertyConsultant30',
 }

@@ -55,7 +55,7 @@ Click-to-chat helpers: `src/utils/whatsapp.js`
 ## Confirmed contact channels
 
 - Phone / WhatsApp: +91 97945 03222 (`https://wa.me/919794503222`)
-- Email: sharmaankit2502@gmail.com
+- Email: triedgerealty26@gmail.com
 - YouTube: https://www.youtube.com/@PropertyConsultant30
 
 ## Project structure

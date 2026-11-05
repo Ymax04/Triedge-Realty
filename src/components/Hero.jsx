@@ -144,7 +144,7 @@ export default function Hero() {
                 <ul
                   role="listbox"
                   aria-labelledby="hero-category"
-                  className="absolute z-30 mt-2 max-h-64 w-full overflow-auto rounded-md border border-white/20 bg-navy-secondary py-1.5 shadow-2xl backdrop-blur-lg"
+                  className="absolute bottom-full z-30 mb-2 max-h-64 w-full overflow-auto rounded-md border border-white/20 bg-navy-secondary py-1.5 shadow-2xl backdrop-blur-lg"
                 >
                   <li>
                     <button
